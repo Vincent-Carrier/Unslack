@@ -11,7 +11,7 @@ import vincentcarrier.todo.models.Task
 class TaskListViewModel(private val repo: TaskRepository = TaskRepository()) : ViewModel() {
 
   init {
-    whenTasksLoaded().subscribe()
+    loadTasks()
   }
 
   private fun whenTasksLoaded(): Single<List<Task>> {
@@ -21,6 +21,15 @@ class TaskListViewModel(private val repo: TaskRepository = TaskRepository()) : V
 
   internal fun addTask(name: String) {
     repo.addTask(Task(name = name))
+    loadTasks()
+  }
+
+  private fun removeTask(id: Long) {
+    repo.removeTask(id)
+    loadTasks()
+  }
+
+  private fun loadTasks() {
     whenTasksLoaded().subscribe()
   }
 
@@ -34,6 +43,7 @@ class TaskListViewModel(private val repo: TaskRepository = TaskRepository()) : V
         taskItemView {
           id(task.id)
           name(task.name)
+          completeTask { removeTask(task.id) }
         }
       }
     }

@@ -17,4 +17,6 @@ class TaskDatabase(private val taskBox: Box<Task> = App.boxStore.boxFor(Task::cl
   }
 
   fun addTask(task: Task) = taskBox.put(task)
+
+  fun removeTask(id: Long) = taskBox.remove(id)
 }

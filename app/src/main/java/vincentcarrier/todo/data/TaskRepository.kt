@@ -22,4 +22,6 @@ class TaskRepository(private val db: TaskDatabase = TaskDatabase(),
   }
 
   fun addTask(task: Task) = db.addTask(task)
+
+  fun removeTask(id: Long) = db.removeTask(id)
 }
