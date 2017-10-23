@@ -1,27 +1,25 @@
 package vincentcarrier.todo.data
 
+import io.objectbox.Box
+import io.objectbox.rx.RxQuery
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import vincentcarrier.todo.data.local.TaskDatabase
+import vincentcarrier.todo.App
 import vincentcarrier.todo.data.remote.TodoistService
 import vincentcarrier.todo.models.Task
 
 
-class TaskRepository(private val db: TaskDatabase = TaskDatabase(),
+class TaskRepository(private val taskBox: Box<Task> = App.boxStore.boxFor(Task::class.java),
                      private val service: TodoistService = TodoistService()) {
 
   fun whenTasksLoaded(): Single<List<Task>> {
-//    return ReactiveNetwork.checkInternetConnectivity()
-//        .flatMap { isOnline ->
-//          if (isOnline) service.whenTasksLoaded() else db.whenTasksLoaded()
-//        }
-    return db.whenTasksLoaded()
+    return RxQuery.single(taskBox.query().build())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribeOn(Schedulers.io())
   }
 
-  fun addTask(task: Task) = db.addTask(task)
+  fun addTask(task: Task) = taskBox.put(task)
 
-  fun removeTask(id: Long) = db.removeTask(id)
+  fun removeTask(id: Long) = taskBox.remove(id)
 }

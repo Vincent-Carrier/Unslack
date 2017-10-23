@@ -10,32 +10,20 @@ import vincentcarrier.todo.models.Task
 
 class TaskListViewModel(private val repo: TaskRepository = TaskRepository()) : ViewModel() {
 
-  init {
-    loadTasks()
-  }
+  internal var projectId: Long? = null
 
-  private fun whenTasksLoaded(): Single<List<Task>> {
+  internal fun whenTasksLoaded(): Single<List<Task>> {
     return repo.whenTasksLoaded()
         .doOnSuccess { controller.setData(it) }
   }
 
   internal fun addTask(name: String) {
-    repo.addTask(Task(name = name))
-    loadTasks()
-  }
-
-  private fun removeTask(id: Long) {
-    repo.removeTask(id)
-    loadTasks()
-  }
-
-  private fun loadTasks() {
+    repo.addTask(Task(name))
     whenTasksLoaded().subscribe()
   }
 
-  internal fun adapter() = controller.adapter
-
   private val controller = TaskListController()
+  internal val adapter = controller.adapter
 
   inner class TaskListController: TypedEpoxyController<List<Task>>() {
     override fun buildModels(tasks: List<Task>) {
@@ -43,7 +31,10 @@ class TaskListViewModel(private val repo: TaskRepository = TaskRepository()) : V
         taskItemView {
           id(task.id)
           name(task.name)
-          completeTask { removeTask(task.id) }
+          completeTask {
+            repo.removeTask(task.id)
+            whenTasksLoaded().subscribe()
+          }
         }
       }
     }
