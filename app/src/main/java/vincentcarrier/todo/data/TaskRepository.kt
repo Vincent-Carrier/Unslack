@@ -1,27 +1,31 @@
 package vincentcarrier.todo.data
 
+import io.objectbox.Box
+import io.objectbox.rx.RxQuery
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import vincentcarrier.todo.data.local.TaskDatabase
+import vincentcarrier.todo.App
 import vincentcarrier.todo.data.remote.TodoistService
 import vincentcarrier.todo.models.Task
 
-
-class TaskRepository(private val db: TaskDatabase = TaskDatabase(),
-                     private val service: TodoistService = TodoistService()) {
+// Note: Normally, one would abstract the database library from the Repository, however
+// I wanted to cut down on the boilerplate
+class TaskRepository(private val projectId: Long,
+    private val taskBox: Box<Task> = App.boxStore.boxFor(Task::class.java),
+    private val service: TodoistService = TodoistService()) {
 
   fun whenTasksLoaded(): Single<List<Task>> {
-//    return ReactiveNetwork.checkInternetConnectivity()
-//        .flatMap { isOnline ->
-//          if (isOnline) service.whenTasksLoaded() else db.whenTasksLoaded()
-//        }
-    return db.whenTasksLoaded()
+    val query = taskBox.query().filter { task ->
+      task.project.targetId == projectId
+    }.build()
+    return RxQuery.single(query)
         .observeOn(AndroidSchedulers.mainThread())
         .subscribeOn(Schedulers.io())
+        .doOnSuccess { println(it) }
   }
 
-  fun addTask(task: Task) = db.addTask(task)
+  fun addTask(task: Task) = taskBox.put(task.apply { project.targetId = projectId })
 
-  fun removeTask(id: Long) = db.removeTask(id)
+  fun removeTask(id: Long) = taskBox.remove(id)
 }

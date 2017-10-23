@@ -6,10 +6,14 @@ import vincentcarrier.todo.models.Project
 import vincentcarrier.todo.models.Task
 
 
+private val todoistApi = Retrofit().createTodoistApi("")
+
+class TodoistService(api: TodoistApi = todoistApi) : TodoistApi by api
+
 interface TodoistApi {
   @GET("sync")
-  fun getAllProjects(): Single<List<Project>>
+  fun whenProjectsLoaded(): Single<List<Project>>
 
   @GET("tasks")
-  fun getTasks(/*@Query("project_id") projectId: Int*/): Single<List<Task>>
+  fun whenTasksLoaded(/*@Query("project_id") projectId: Int*/): Single<List<Task>>
 }

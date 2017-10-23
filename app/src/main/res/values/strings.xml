@@ -1,4 +1,6 @@
 <resources>
   <string name="app_name">Todo</string>
   <string name="enter_a_task">Enter a task</string>
+  <string name="title_activity_project_list">Projects</string>
+  <string name="tasks_screen_title">Tasks</string>
 </resources>
