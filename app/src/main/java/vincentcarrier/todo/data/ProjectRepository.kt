@@ -1,30 +1,20 @@
 package vincentcarrier.todo.data
 
-import io.objectbox.Box
-import io.objectbox.rx.RxQuery
 import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import vincentcarrier.todo.App
+import vincentcarrier.todo.data.local.ProjectDatabase
 import vincentcarrier.todo.data.remote.TodoistService
 import vincentcarrier.todo.models.Project
 
 
-class ProjectRepository(private val projectBox: Box<Project> = App.boxStore.boxFor(Project::class.java),
-                        private val service: TodoistService = TodoistService()) {
+class ProjectRepository {
+
+  private val db = ProjectDatabase()
+  private val service = TodoistService()
 
   fun whenProjectsLoaded(): Single<List<Project>> {
-    return RxQuery.single(projectBox.query().build())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribeOn(Schedulers.io())
+    return db.whenProjectsLoaded()
   }
 
-  fun addProject(project: Project) = projectBox.put(project)
+  fun addProject(project: Project) = db.addProject(project)
 
-  init {
-    if (projectBox.all.count() < 2) {
-      addProject(Project("Inbox"))
-      addProject(Project("My side project"))
-    }
-  }
 }
