@@ -12,7 +12,7 @@ import vincentcarrier.todo.screens.projectlist.ProjectListActivity
 
 
 object User {
-  var accessToken = "8a41076f7f20434368b2873dfe4d691313acface"
+  var accessToken = ACCESS_TOKEN
 
   fun isLoggedIn() = accessToken.isNotEmpty()
 }

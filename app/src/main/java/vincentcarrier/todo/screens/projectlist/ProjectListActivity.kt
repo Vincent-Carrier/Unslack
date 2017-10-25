@@ -21,8 +21,9 @@ class ProjectListActivity : AppCompatActivity() {
     setSupportActionBar(toolbar)
 
     fab.setOnClickListener { view ->
-
+      // TODO
     }
+
     projectList.adapter = vm.adapter
   }
 

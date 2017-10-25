@@ -12,7 +12,7 @@ class ProjectRepository {
   private val service = TodoistService()
 
   fun whenProjectsLoaded(): Single<List<Project>> {
-    return db.whenProjectsLoaded()
+    return service.whenProjectsLoaded()
   }
 
   fun addProject(project: Project) = db.addProject(project)

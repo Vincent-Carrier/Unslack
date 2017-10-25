@@ -5,15 +5,16 @@ import vincentcarrier.todo.data.local.TaskDatabase
 import vincentcarrier.todo.data.remote.TodoistService
 import vincentcarrier.todo.models.Task
 
-// Note: Normally, one would abstract the database library from the Repository, however
-// I wanted to cut down on the boilerplate
-class TaskRepository(private val projectId: Long) {
+class TaskRepository(projectId: Long) {
 
   private val db: TaskDatabase = TaskDatabase(projectId)
   private val service: TodoistService = TodoistService()
 
   fun whenTasksLoaded(): Single<List<Task>> {
-    return db.whenTasksLoaded()
+    return service.whenTasksLoaded() /*ReactiveNetwork.checkInternetConnectivity()
+        .flatMap { isOnline ->
+          if (isOnline) service.whenTasksLoaded() else db.whenTasksLoaded()
+        }*/
   }
 
   fun addTask(task: Task) = db.addTask(task)

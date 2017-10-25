@@ -4,7 +4,7 @@ import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import io.reactivex.schedulers.Schedulers
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import okhttp3.logging.HttpLoggingInterceptor.Level.BASIC
+import okhttp3.logging.HttpLoggingInterceptor.Level.BODY
 import okhttp3.logging.HttpLoggingInterceptor.Level.NONE
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -37,7 +37,7 @@ internal class Retrofit {
           chain.proceed(request)
         }
         .addInterceptor(HttpLoggingInterceptor().apply {
-          level = if (BuildConfig.DEBUG) BASIC else NONE
+          level = if (BuildConfig.DEBUG) BODY else NONE
         })
         .build()
   }
