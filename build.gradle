@@ -3,13 +3,14 @@ buildscript {
     ext.android_support_version = "26.1.0"
     ext.autodispose_version = '0.3.0'
     ext.objectboxVersion = '1.1.0'
+    ext.android_lifecycle_version = '1.0.3'
 
     repositories {
         google()
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0-beta7'
+        classpath 'com.android.tools.build:gradle:3.0.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }

@@ -3,25 +3,18 @@ package vincentcarrier.todo.screens.tasklist
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import com.airbnb.epoxy.TypedEpoxyController
-import io.reactivex.Single
-import vincentcarrier.todo.data.TaskRepository
+import vincentcarrier.todo.data.TaskRepo
 import vincentcarrier.todo.models.Task
 
 
-class TaskListViewModel(private val repo: TaskRepository)
-  : ViewModel() {
+class TaskListViewModel(private val repo: TaskRepo) : ViewModel() {
 
-  internal fun whenTasksLoaded(): Single<List<Task>> {
-    return repo.whenTasksLoaded()
-        .doOnSuccess {
-          controller.setData(it)
-        }
-  }
+  internal fun whenTasksLoaded() = repo.whenTasksLoaded()
+      .doOnNext {
+        controller.setData(it)
+      }
 
-  internal fun addTask(name: String) {
-    repo.addTask(Task(name))
-    whenTasksLoaded().subscribe()
-  }
+  internal fun addTask(name: String) = repo.addTask(Task(name))
 
   private val controller = TaskListController()
   internal val adapter = controller.adapter
@@ -34,7 +27,6 @@ class TaskListViewModel(private val repo: TaskRepository)
           name(task.name)
           completeTask {
             repo.removeTask(task.id)
-            whenTasksLoaded().subscribe()
           }
         }
       }
@@ -42,7 +34,7 @@ class TaskListViewModel(private val repo: TaskRepository)
   }
 }
 
-class TaskListVmFactory(private val repo: TaskRepository)
+class TaskListVmFactory(private val repo: TaskRepo)
   : ViewModelProvider.Factory {
   override fun <T : ViewModel> create(modelClass: Class<T>): T {
     @Suppress("UNCHECKED_CAST") return TaskListViewModel(repo) as T

@@ -1,17 +1,17 @@
 package vincentcarrier.todo.data
 
-import io.reactivex.Single
-import vincentcarrier.todo.data.local.TaskDatabase
+import io.reactivex.Observable
+import vincentcarrier.todo.data.local.TaskDao
 import vincentcarrier.todo.data.remote.TodoistService
 import vincentcarrier.todo.models.Task
 
-class TaskRepository(projectId: Long) {
+class TaskRepo(projectId: Long) {
 
-  private val db: TaskDatabase = TaskDatabase(projectId)
+  private val db: TaskDao = TaskDao(projectId)
   private val service: TodoistService = TodoistService()
 
-  fun whenTasksLoaded(): Single<List<Task>> {
-    return service.whenTasksLoaded() /*ReactiveNetwork.checkInternetConnectivity()
+  fun whenTasksLoaded(): Observable<List<Task>> {
+    return db.whenTasksLoaded() /*ReactiveNetwork.checkInternetConnectivity()
         .flatMap { isOnline ->
           if (isOnline) service.whenTasksLoaded() else db.whenTasksLoaded()
         }*/

@@ -5,17 +5,18 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable.Factory
 import android.view.KeyEvent
-import io.reactivex.rxkotlin.subscribeBy
+import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
+import com.uber.autodispose.kotlin.autoDisposeWith
 import kotlinx.android.synthetic.main.activity_task_list.addTaskEditText
 import kotlinx.android.synthetic.main.activity_task_list.taskList
 import vincentcarrier.todo.R.layout
-import vincentcarrier.todo.data.TaskRepository
+import vincentcarrier.todo.data.TaskRepo
 
 class TaskListActivity : AppCompatActivity() {
 
   private val vm by lazy {
     ViewModelProviders.of(
-        this, TaskListVmFactory(TaskRepository(intent.extras.getLong("project_id"))))
+        this, TaskListVmFactory(TaskRepo(intent.extras.getLong("project_id"))))
         .get(TaskListViewModel::class.java)
   }
 
@@ -36,8 +37,8 @@ class TaskListActivity : AppCompatActivity() {
 
     taskList.adapter = vm.adapter
 
-    vm.whenTasksLoaded().subscribeBy()
+    vm.whenTasksLoaded()
+        .autoDisposeWith(AndroidLifecycleScopeProvider.from(this))
+        .subscribe()
   }
-
-
 }

@@ -1,18 +1,18 @@
 package vincentcarrier.todo.data
 
-import io.reactivex.Single
-import vincentcarrier.todo.data.local.ProjectDatabase
+import io.reactivex.Observable
+import vincentcarrier.todo.data.local.ProjectDao
 import vincentcarrier.todo.data.remote.TodoistService
 import vincentcarrier.todo.models.Project
 
 
-class ProjectRepository {
+class ProjectRepo {
 
-  private val db = ProjectDatabase()
+  private val db = ProjectDao()
   private val service = TodoistService()
 
-  fun whenProjectsLoaded(): Single<List<Project>> {
-    return service.whenProjectsLoaded()
+  fun whenProjectsLoaded(): Observable<List<Project>> {
+    return db.whenProjectsLoaded()
   }
 
   fun addProject(project: Project) = db.addProject(project)
