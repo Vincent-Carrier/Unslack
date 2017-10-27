@@ -5,18 +5,18 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable.Factory
 import android.view.KeyEvent
-import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
-import com.uber.autodispose.kotlin.autoDisposeWith
 import kotlinx.android.synthetic.main.activity_task_list.addTaskEditText
 import kotlinx.android.synthetic.main.activity_task_list.taskList
 import vincentcarrier.todo.R.layout
 import vincentcarrier.todo.data.TaskRepo
+import vincentcarrier.todo.screens.PROJECT_ID
+import vincentcarrier.todo.screens.dismissKeyboard
 
 class TaskListActivity : AppCompatActivity() {
 
   private val vm by lazy {
     ViewModelProviders.of(
-        this, TaskListVmFactory(TaskRepo(intent.extras.getLong("project_id"))))
+        this, TaskListVmFactory(TaskRepo(intent.extras.getLong(PROJECT_ID))))
         .get(TaskListViewModel::class.java)
   }
 
@@ -28,8 +28,8 @@ class TaskListActivity : AppCompatActivity() {
       setOnEditorActionListener { _, _, event ->
         if ((event.keyCode == KeyEvent.KEYCODE_ENTER) and !text.isNullOrBlank()) {
           vm.addTask(text.toString())
-          // clearComposingText() doesn't work for some reason
-          text = Factory.getInstance().newEditable("")
+          text = Factory.getInstance().newEditable("") // clearComposingText() doesn't work for some reason
+          dismissKeyboard()
           return@setOnEditorActionListener true
         } else return@setOnEditorActionListener false
       }
@@ -38,7 +38,7 @@ class TaskListActivity : AppCompatActivity() {
     taskList.adapter = vm.adapter
 
     vm.whenTasksLoaded()
-        .autoDisposeWith(AndroidLifecycleScopeProvider.from(this))
+//        .autoDisposeWith(AndroidLifecycleScopeProvider.from(this))
         .subscribe()
   }
 }

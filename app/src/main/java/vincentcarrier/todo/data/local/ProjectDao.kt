@@ -19,12 +19,12 @@ class ProjectDao {
         .subscribeOn(Schedulers.io())
   }
 
-  fun addProject(project: Project) = projectBox.put(project)
+  fun add(project: Project) = projectBox.put(project)
 
   init {
     if (projectBox.all.count() < 2) {
-      addProject(Project("My main project"))
-      addProject(Project("My side project"))
+      add(Project("My main project"))
+      add(Project("My side project"))
     }
   }
 }

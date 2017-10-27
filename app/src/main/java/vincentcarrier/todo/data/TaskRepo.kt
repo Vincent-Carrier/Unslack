@@ -17,8 +17,8 @@ class TaskRepo(projectId: Long) {
         }*/
   }
 
-  fun addTask(task: Task) = db.addTask(task)
+  fun add(task: Task) = db.add(task)
 
-  fun removeTask(id: Long) = db.removeTask(id)
+  fun remove(task: Task) = db.remove(task)
 }
 

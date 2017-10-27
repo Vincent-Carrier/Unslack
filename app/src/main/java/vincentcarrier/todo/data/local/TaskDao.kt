@@ -1,26 +1,28 @@
 package vincentcarrier.todo.data.local
 
-import io.objectbox.Box
 import io.objectbox.rx.RxQuery
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import vincentcarrier.todo.App
+import vincentcarrier.todo.models.Project
 import vincentcarrier.todo.models.Task
+import vincentcarrier.todo.models.Task_
 
 
 class TaskDao(private val projectId: Long) {
 
-  private val taskBox: Box<Task> = App.boxStore.boxFor(Task::class.java)
+  private val projectBox = App.boxStore.boxFor(Project::class.java)
+  private val taskBox = App.boxStore.boxFor(Task::class.java)
+
+  private val project = projectBox.get(projectId)
 
   fun whenTasksLoaded(): Observable<List<Task>> {
-    val query = taskBox.query().filter { task ->
-      task.project.targetId == projectId
-    }.build()
+    val query = taskBox.query().equal(Task_.projectId, projectId).build()
     return RxQuery.observable(query)
         .subscribeOn(Schedulers.io())
   }
 
-  fun addTask(task: Task) = taskBox.put(task.apply { project.targetId = projectId })
+  fun add(task: Task) = projectBox.put(project.apply { tasks.add(task) })
 
-  fun removeTask(id: Long) = taskBox.remove(id)
+  fun remove(task: Task) = taskBox.remove(task)
 }

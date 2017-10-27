@@ -15,6 +15,6 @@ class ProjectRepo {
     return db.whenProjectsLoaded()
   }
 
-  fun addProject(project: Project) = db.addProject(project)
+  fun add(project: Project) = db.add(project)
 
 }

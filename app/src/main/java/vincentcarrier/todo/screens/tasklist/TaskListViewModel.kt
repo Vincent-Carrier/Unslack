@@ -3,6 +3,7 @@ package vincentcarrier.todo.screens.tasklist
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import com.airbnb.epoxy.TypedEpoxyController
+import io.reactivex.android.schedulers.AndroidSchedulers
 import vincentcarrier.todo.data.TaskRepo
 import vincentcarrier.todo.models.Task
 
@@ -10,11 +11,12 @@ import vincentcarrier.todo.models.Task
 class TaskListViewModel(private val repo: TaskRepo) : ViewModel() {
 
   internal fun whenTasksLoaded() = repo.whenTasksLoaded()
+      .observeOn(AndroidSchedulers.mainThread())
       .doOnNext {
         controller.setData(it)
       }
 
-  internal fun addTask(name: String) = repo.addTask(Task(name))
+  internal fun addTask(name: String) = repo.add(Task(name))
 
   private val controller = TaskListController()
   internal val adapter = controller.adapter
@@ -26,7 +28,7 @@ class TaskListViewModel(private val repo: TaskRepo) : ViewModel() {
           id(task.id)
           name(task.name)
           completeTask {
-            repo.removeTask(task.id)
+            repo.remove(task)
           }
         }
       }
