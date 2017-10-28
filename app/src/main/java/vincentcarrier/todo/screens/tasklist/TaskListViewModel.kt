@@ -16,12 +16,12 @@ class TaskListViewModel(private val repo: TaskRepo) : ViewModel() {
         controller.setData(it)
       }
 
-  internal fun addTask(name: String) = repo.add(Task(name))
+  internal fun addTask(name: String) = repo.put(Task(name))
 
   private val controller = TaskListController()
   internal val adapter = controller.adapter
 
-  inner class TaskListController: TypedEpoxyController<List<Task>>() {
+  private inner class TaskListController: TypedEpoxyController<List<Task>>() {
     override fun buildModels(tasks: List<Task>) {
       tasks.forEach { task ->
         taskItemView {

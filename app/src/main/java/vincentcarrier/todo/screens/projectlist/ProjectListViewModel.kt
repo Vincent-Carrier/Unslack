@@ -14,7 +14,10 @@ import vincentcarrier.todo.screens.PROJECT_ID
 import vincentcarrier.todo.screens.tasklist.TaskListActivity
 
 
-class ProjectListViewModel(app: Application, private val repo: ProjectRepo = ProjectRepo()) : AndroidViewModel(app) {
+class ProjectListViewModel(
+    app: Application,
+    private val repo: ProjectRepo = ProjectRepo()
+) : AndroidViewModel(app) {
 
   private val controller = ProjectListController()
 
@@ -24,7 +27,7 @@ class ProjectListViewModel(app: Application, private val repo: ProjectRepo = Pro
       .observeOn(AndroidSchedulers.mainThread())
       .doOnNext { controller.setData(it) }
 
-  inner class ProjectListController: TypedEpoxyController<List<Project>>() {
+  private inner class ProjectListController: TypedEpoxyController<List<Project>>() {
     override fun buildModels(Projects: List<Project>) {
       Projects.forEach { project ->
         projectItemView {
@@ -40,8 +43,10 @@ class ProjectListViewModel(app: Application, private val repo: ProjectRepo = Pro
   }
 }
 
-class ProjectListVmFactory(private val app: Application, private val repo: ProjectRepo = ProjectRepo())
-  : ViewModelProvider.Factory {
+class ProjectListVmFactory(
+    private val app: Application,
+    private val repo: ProjectRepo = ProjectRepo()
+) : ViewModelProvider.Factory {
   override fun <T : ViewModel> create(modelClass: Class<T>): T {
     @Suppress("UNCHECKED_CAST") return ProjectListViewModel(app, repo) as T
   }

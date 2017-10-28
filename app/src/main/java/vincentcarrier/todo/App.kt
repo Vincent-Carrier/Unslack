@@ -10,6 +10,8 @@ import vincentcarrier.todo.models.MyObjectBox
 class App : Application() {
 
   companion object {
+    lateinit var instance: App
+      private set
     lateinit var boxStore: BoxStore
       private set
   }
@@ -17,6 +19,7 @@ class App : Application() {
   override fun onCreate() {
     super.onCreate()
     RxJavaPlugins.setErrorHandler { it.printStackTrace() }
+    instance = this
     boxStore = MyObjectBox.builder().androidContext(this).build()
     if (BuildConfig.DEBUG) AndroidObjectBrowser(boxStore).start(this)
   }

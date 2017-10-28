@@ -22,7 +22,7 @@ internal class Retrofit {
   private fun retrofit(client: OkHttpClient): Retrofit {
     return Retrofit.Builder()
         .client(client)
-        .baseUrl("https://todoist.com/API/v8/")
+        .baseUrl("https://todoist.com/api/v7/")
         .addConverterFactory(GsonConverterFactory.create())
         .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
         .build()
