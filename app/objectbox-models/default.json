@@ -43,10 +43,36 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "3:6720716132382543602",
+      "lastPropertyId": "4:7584844605403623527",
+      "name": "Command",
+      "properties": [
+        {
+          "id": "1:3632656180910849353",
+          "name": "id"
+        },
+        {
+          "id": "2:1365618560268766172",
+          "name": "type"
+        },
+        {
+          "id": "3:6642741980486506656",
+          "indexId": "3:8655545473067215758",
+          "name": "taskId"
+        },
+        {
+          "id": "4:7584844605403623527",
+          "indexId": "4:619788420905448080",
+          "name": "projectId"
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "2:870079611725928212",
-  "lastIndexId": "2:2723602583214188582",
+  "lastEntityId": "3:6720716132382543602",
+  "lastIndexId": "4:619788420905448080",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 4,

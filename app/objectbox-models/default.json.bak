@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:3315580197592985028",
-      "lastPropertyId": "5:6559646247026096846",
+      "lastPropertyId": "6:1067642384786637357",
       "name": "Task",
       "properties": [
         {
@@ -19,6 +19,11 @@
         {
           "id": "5:6559646247026096846",
           "name": "dateCreated"
+        },
+        {
+          "id": "6:1067642384786637357",
+          "indexId": "2:2723602583214188582",
+          "name": "projectId"
         }
       ],
       "relations": []
@@ -41,7 +46,7 @@
     }
   ],
   "lastEntityId": "2:870079611725928212",
-  "lastIndexId": "1:2332280059173440744",
+  "lastIndexId": "2:2723602583214188582",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 4,

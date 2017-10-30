@@ -20,9 +20,7 @@ class ProjectListActivity : AppCompatActivity() {
     setContentView(R.layout.activity_project_list)
     setSupportActionBar(toolbar)
 
-    fab.setOnClickListener { view ->
-      // TODO
-    }
+    fab.setOnClickListener { TODO() }
 
     projectList.adapter = vm.adapter
   }
