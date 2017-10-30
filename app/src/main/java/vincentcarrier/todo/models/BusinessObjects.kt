@@ -10,13 +10,15 @@ import io.objectbox.relation.ToOne
 import org.joda.time.LocalDateTime
 import org.joda.time.format.DateTimeFormat
 
+interface BusinessEntity
+
 @Entity
-class Project() { // ObjectBox needs either an empty or all-args constructor
+class Project() : BusinessEntity { // ObjectBox needs either an empty or all-args constructor
   constructor(name: String) : this() {
     this.name = name
   }
 
-  constructor(response: ProjectResponse) : this() {
+  constructor(response: ProjectJson) : this() {
     id = response.id
     name = response.name
   }
@@ -27,13 +29,13 @@ class Project() { // ObjectBox needs either an empty or all-args constructor
 }
 
 @Entity
-class Task() {
+class Task() : BusinessEntity {
   constructor(name: String) : this() {
     this.name = name
     dateCreated = LocalDateTime()
   }
 
-  constructor(response: TaskResponse) : this() {
+  constructor(response: TaskJson) : this() {
     id = response.id
     name = response.content
     dateCreated = LocalDateTime.parse(response.date_added,

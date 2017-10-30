@@ -10,7 +10,8 @@ import vincentcarrier.todo.models.Task
 
 class TaskListViewModel(private val repo: TaskRepo) : ViewModel() {
 
-  internal fun whenTasksLoaded() = repo.whenTasksLoaded()
+  internal fun whenTasksLoaded() =
+      repo.whenTasksLoaded()
       .observeOn(AndroidSchedulers.mainThread())
       .doOnNext {
         controller.setData(it)
@@ -27,9 +28,7 @@ class TaskListViewModel(private val repo: TaskRepo) : ViewModel() {
         taskItemView {
           id(task.id)
           name(task.name)
-          completeTask {
-            repo.remove(task)
-          }
+          completeTask { repo.remove(task) }
         }
       }
     }

@@ -68,6 +68,7 @@ dependencies {
   implementation "com.uber.autodispose:autodispose-android-archcomponents:$autodispose_version"
   implementation "com.uber.autodispose:autodispose-kotlin:$autodispose_version"
   implementation 'com.github.pwittchen:reactivenetwork-rx2:0.12.1'
+  implementation 'com.hwangjr.rxbus:rxbus:1.0.6'
 
   implementation 'com.squareup.retrofit2:retrofit:2.3.0'
   implementation 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
@@ -88,9 +89,6 @@ dependencies {
   // Used to move RecyclerView logic into the ViewModel
   implementation 'com.airbnb.android:epoxy:2.7.0'
   kapt 'com.airbnb.android:epoxy-processor:2.7.0'
-
-  // Used to move navigation logic into the ViewModel
-  implementation 'ru.terrakok.cicerone:cicerone:2.1.0'
 
   implementation 'joda-time:joda-time:2.9.9'
 
