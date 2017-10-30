@@ -89,9 +89,6 @@ dependencies {
   implementation 'com.airbnb.android:epoxy:2.7.0'
   kapt 'com.airbnb.android:epoxy-processor:2.7.0'
 
-  // Used to move navigation logic into the ViewModel
-  implementation 'ru.terrakok.cicerone:cicerone:2.1.0'
-
   implementation 'joda-time:joda-time:2.9.9'
 
 

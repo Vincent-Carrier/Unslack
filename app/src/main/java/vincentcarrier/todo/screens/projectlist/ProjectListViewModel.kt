@@ -23,7 +23,8 @@ class ProjectListViewModel(
 
   internal val adapter = controller.adapter
 
-  internal fun whenProjectsLoaded() = repo.whenProjectsLoaded()
+  internal fun whenProjectsLoaded() =
+      repo.whenProjectsLoaded()
       .observeOn(AndroidSchedulers.mainThread())
       .doOnNext { controller.setData(it) }
 
@@ -34,8 +35,7 @@ class ProjectListViewModel(
           id(project.id)
           name(project.name)
           openProject {
-            getApplication<App>()
-                .startActivity<TaskListActivity>(PROJECT_ID to project.id)
+            getApplication<App>().startActivity<TaskListActivity>(PROJECT_ID to project.id)
           }
         }
       }

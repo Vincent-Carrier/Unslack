@@ -7,6 +7,7 @@ import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import vincentcarrier.todo.App
 import vincentcarrier.todo.data.remote.TodoistService
+import vincentcarrier.todo.models.Command
 import vincentcarrier.todo.models.Project
 import vincentcarrier.todo.models.Task
 
@@ -15,16 +16,17 @@ class ProjectRepo(private val service: TodoistService = TodoistService()) {
 
   private val projectBox: Box<Project> = App.boxStore.boxFor(Project::class.java)
   private val taskBox: Box<Task> = App.boxStore.boxFor(Task::class.java)
+  private val commandBox = App.boxStore.boxFor(Command::class.java)
 
-  fun whenProjectsLoaded(): Observable<List<Project>> {
-    return ReactiveNetwork.observeNetworkConnectivity(App.instance)
-        .observeOn(Schedulers.io())
-        .flatMap { connectivity ->
-          if (connectivity.isAvailable) loadFromNetwork() else loadFromDisk()
-        }
-  }
+  fun whenProjectsLoaded(): Observable<List<Project>> =
+      ReactiveNetwork.observeNetworkConnectivity(App.instance)
+      .observeOn(Schedulers.io())
+      .flatMap { connectivity ->
+        if (connectivity.isAvailable) loadFromNetwork() else loadFromDisk()
+      }
 
-  private fun loadFromNetwork() = service.whenProjectsLoaded()
+  private fun loadFromNetwork() =
+      service.whenProjectsLoaded()
       .map { response ->
         response.projects.map { Project(it) } to response.items.map { Task(it) }
       }
@@ -36,6 +38,7 @@ class ProjectRepo(private val service: TodoistService = TodoistService()) {
         response.first
       }
 
-  private fun loadFromDisk() = RxQuery.observable(projectBox.query().build())
+  private fun loadFromDisk() =
+      RxQuery.observable(projectBox.query().build())
       .subscribeOn(Schedulers.io())
 }
