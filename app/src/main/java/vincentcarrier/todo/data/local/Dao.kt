@@ -34,8 +34,8 @@ interface Dao<T> { // Using Kotlin delegates would have been preferable, but thr
   fun remove(objects: Collection<T>?) = box.remove(objects)
   fun removeAll() = box.removeAll()
 
-  fun whenLoaded(query: QueryBuilder<T> = box.query()): Observable<List<T>> {
-    return RxQuery.observable(query.build())
+  fun whenLoaded(filter: (QueryBuilder<T>) -> QueryBuilder<T> = { it }): Observable<List<T>> {
+    return RxQuery.observable(filter(box.query()).build())
         .subscribeOn(Schedulers.io())
   }
 }
