@@ -11,7 +11,7 @@ import vincentcarrier.todo.models.Task
 class TaskListViewModel(private val repo: TaskRepo) : ViewModel() {
 
   internal fun whenTasksLoaded() =
-      repo.whenTasksLoaded()
+      repo.whenLoaded()
       .observeOn(AndroidSchedulers.mainThread())
       .doOnNext {
         controller.setData(it)
