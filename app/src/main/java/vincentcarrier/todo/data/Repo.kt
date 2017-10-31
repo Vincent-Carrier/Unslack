@@ -18,16 +18,14 @@ abstract class Repo<T> {
   internal val commandDao = CommandDao()
 
   internal fun whenLoaded(): Observable<List<T>> =
-      Observable.interval(5, SECONDS)
-          .flatMap {
-            ReactiveNetwork.observeNetworkConnectivity(App.instance)
-                .subscribeOn(Schedulers.io())
-                .flatMap { connectivity ->
-                  if (connectivity.isAvailable and User.needsSyncing(10)) whenLoadedFromNetwork()
-                  else whenLoadedFromDisk()
-                }
+      ReactiveNetwork.observeNetworkConnectivity(App.instance)
+          .subscribeOn(Schedulers.io())
+          .flatMap { connectivity ->
+            if (connectivity.isAvailable and User.needsSyncing(10)) {
+              Observable.interval(0, 10, SECONDS)
+                  .flatMap { whenLoadedFromNetwork() }
+            } else whenLoadedFromDisk()
           }
-
 
   open internal fun whenLoadedFromDisk(): Observable<List<T>> = dao.whenLoaded()
 
