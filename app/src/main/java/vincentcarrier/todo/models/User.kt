@@ -8,13 +8,18 @@ import net.openid.appauth.AuthorizationRequest
 import net.openid.appauth.AuthorizationRequest.Builder
 import net.openid.appauth.AuthorizationService
 import net.openid.appauth.AuthorizationServiceConfiguration
+import org.joda.time.LocalDateTime
 import vincentcarrier.todo.screens.projectlist.ProjectListActivity
 
 
 object User {
   var accessToken = ACCESS_TOKEN
 
+  var lastSync = LocalDateTime().minusMillis(Int.MAX_VALUE)
+
   fun isLoggedIn() = accessToken.isNotEmpty()
+
+  fun needsSyncing(seconds: Int) = isLoggedIn() and lastSync.isBefore(LocalDateTime().minusSeconds(seconds))
 }
 
 fun startLogin(context: Context) {

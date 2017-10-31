@@ -24,7 +24,7 @@ class ProjectListViewModel(
   internal val adapter = controller.adapter
 
   internal fun whenProjectsLoaded() =
-      repo.whenProjectsLoaded()
+      repo.whenLoaded()
       .observeOn(AndroidSchedulers.mainThread())
       .doOnNext { controller.setData(it) }
 

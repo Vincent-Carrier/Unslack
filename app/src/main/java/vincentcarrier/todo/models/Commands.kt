@@ -5,6 +5,7 @@ import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
 import io.objectbox.relation.ToOne
 import vincentcarrier.todo.models.Commands.ITEM_ADD
+import vincentcarrier.todo.models.Commands.ITEM_REMOVE
 import vincentcarrier.todo.models.Commands.PROJECT_ADD
 import java.util.UUID
 import kotlin.annotation.AnnotationRetention.SOURCE
@@ -12,6 +13,7 @@ import kotlin.annotation.AnnotationRetention.SOURCE
 object Commands {
   const val PROJECT_ADD = "project_add"
   const val ITEM_ADD = "item_add"
+  const val ITEM_REMOVE = "item_remove"
 }
 
 @Retention(SOURCE)
@@ -47,6 +49,11 @@ sealed class CommandJson {
 
   class ItemAddCommand(task: Task) : CommandJson() {
     override val type = ITEM_ADD
+    override val args = TaskJson(task)
+  }
+
+  class ItemRemoveCommand(task: Task) : CommandJson() {
+    override val type = ITEM_REMOVE
     override val args = TaskJson(task)
   }
 }

@@ -1,40 +1,32 @@
 package vincentcarrier.todo.data
 
-import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
 import io.reactivex.Observable
-import io.reactivex.schedulers.Schedulers
-import vincentcarrier.todo.App
-import vincentcarrier.todo.data.local.CommandDao
+import org.joda.time.LocalDateTime
 import vincentcarrier.todo.data.local.ProjectDao
 import vincentcarrier.todo.data.local.TaskDao
-import vincentcarrier.todo.data.remote.TodoistService
 import vincentcarrier.todo.models.Project
 import vincentcarrier.todo.models.Task
+import vincentcarrier.todo.models.User
 
 
-class ProjectRepo(private val service: TodoistService = TodoistService()) {
+class ProjectRepo : Repo<Project>() {
 
-  private val projectDao = ProjectDao()
+  override val dao = ProjectDao()
   private val taskDao = TaskDao()
-  private val commandDao = CommandDao()
 
-  fun whenProjectsLoaded(): Observable<List<Project>> =
-      ReactiveNetwork.observeNetworkConnectivity(App.instance)
-      .observeOn(Schedulers.io())
-      .flatMap { connectivity ->
-        if (connectivity.isAvailable) loadFromNetwork() else projectDao.whenLoaded()
-      }
+  override fun whenLoadedFromNetwork(): Observable<List<Project>> {
+    return service.whenProjectsLoaded()
+        .map { response ->
+          response.projects.map { Project(it) } to response.items.map { Task(it) }
+        }
+        .doOnNext { response ->
+          dao.put(response.first)
+          taskDao.put(response.second)
 
-  private fun loadFromNetwork() =
-      service.whenProjectsLoaded()
-      .map { response ->
-        response.projects.map { Project(it) } to response.items.map { Task(it) }
-      }
-      .doOnNext { response ->
-        projectDao.put(response.first)
-        taskDao.put(response.second)
-      }
-      .map { response ->
-        response.first
-      }
+          User.lastSync = LocalDateTime()
+        }
+        .map { response ->
+          response.first
+        }
+  }
 }
