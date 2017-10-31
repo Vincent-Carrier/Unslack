@@ -15,7 +15,7 @@ import vincentcarrier.todo.screens.tasklist.TaskListActivity
 
 
 class ProjectListViewModel(
-    app: Application,
+    app: Application = App.instance,
     private val repo: ProjectRepo = ProjectRepo()
 ) : AndroidViewModel(app) {
 
@@ -44,7 +44,7 @@ class ProjectListViewModel(
 }
 
 class ProjectListVmFactory(
-    private val app: Application,
+    private val app: Application = App.instance,
     private val repo: ProjectRepo = ProjectRepo()
 ) : ViewModelProvider.Factory {
   override fun <T : ViewModel> create(modelClass: Class<T>): T {
