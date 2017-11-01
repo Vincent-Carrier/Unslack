@@ -15,11 +15,14 @@ import vincentcarrier.todo.screens.projectlist.ProjectListActivity
 object User {
   var accessToken = ACCESS_TOKEN
 
-  var lastSync = LocalDateTime().minusMillis(Int.MAX_VALUE)
-
   fun isLoggedIn() = accessToken.isNotEmpty()
 
-  fun needsSyncing(seconds: Int) = isLoggedIn() and lastSync.isBefore(LocalDateTime().minusSeconds(seconds))
+  var lastSyncTime = LocalDateTime().minusMillis(Int.MAX_VALUE)
+    private set
+
+  fun updateLastSyncTime() { lastSyncTime = LocalDateTime() }
+
+  fun needsSyncing(seconds: Int = 10) = isLoggedIn() and lastSyncTime.isBefore(LocalDateTime().minusSeconds(seconds))
 }
 
 fun startLogin(context: Context) {

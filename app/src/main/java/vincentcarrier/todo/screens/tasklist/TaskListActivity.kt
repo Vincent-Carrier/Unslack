@@ -5,8 +5,12 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable.Factory
 import android.view.KeyEvent
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.addTo
+import io.reactivex.rxkotlin.subscribeBy
 import kotlinx.android.synthetic.main.activity_task_list.addTaskEditText
 import kotlinx.android.synthetic.main.activity_task_list.taskList
+import org.jetbrains.anko.toast
 import vincentcarrier.todo.R.layout
 import vincentcarrier.todo.data.TaskRepo
 import vincentcarrier.todo.screens.PROJECT_ID
@@ -15,10 +19,11 @@ import vincentcarrier.todo.screens.dismissKeyboard
 class TaskListActivity : AppCompatActivity() {
 
   private val vm by lazy {
-    ViewModelProviders.of(
-        this, TaskListVmFactory(TaskRepo(intent.extras.getLong(PROJECT_ID))))
+    ViewModelProviders.of(this, TaskListVmFactory(TaskRepo(intent.extras.getLong(PROJECT_ID))))
         .get(TaskListViewModel::class.java)
   }
+
+  private val disposables = CompositeDisposable()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -36,9 +41,18 @@ class TaskListActivity : AppCompatActivity() {
     }
 
     taskList.adapter = vm.adapter
+  }
 
+  override fun onStart() {
+    super.onStart()
     vm.whenTasksLoaded()
-//        .autoDisposeWith(AndroidLifecycleScopeProvider.from(this))
-        .subscribe()
+        .subscribeBy(
+            onError = { toast(it.localizedMessage) }
+        ).addTo(disposables)
+  }
+
+  override fun onPause() {
+    super.onPause()
+    disposables.clear()
   }
 }

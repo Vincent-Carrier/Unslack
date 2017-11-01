@@ -1,6 +1,8 @@
 package vincentcarrier.todo
 
 import android.app.Application
+import android.content.Context
+import android.net.ConnectivityManager
 import io.objectbox.BoxStore
 import io.objectbox.android.AndroidObjectBrowser
 import io.reactivex.plugins.RxJavaPlugins
@@ -14,6 +16,11 @@ class App : Application() {
       private set
     lateinit var boxStore: BoxStore
       private set
+
+    fun isOnline(): Boolean {
+      val netInfo = (instance.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).activeNetworkInfo
+      return netInfo != null && netInfo.isConnectedOrConnecting
+    }
   }
 
   override fun onCreate() {

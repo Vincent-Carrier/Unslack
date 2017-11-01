@@ -25,7 +25,7 @@ interface Dao<T> { // Using Kotlin delegates would have been preferable, but thr
   fun get(id: Long): T  = box.get(id)
   fun get(ids: Iterable<Long>): List<T> = box.get(ids)
   fun count(): Long = box.count()
-  fun getAll(): List<T> = box.getAll()
+  fun all(): List<T> = box.all
   fun put(entity: T): Long = box.put(entity)
   fun put(entities: Collection<T>?) = box.put(entities)
   fun remove(id: Long) = box.remove(id)

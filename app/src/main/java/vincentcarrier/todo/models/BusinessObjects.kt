@@ -45,8 +45,7 @@ class Task() : BusinessEntity {
 
   @Id(assignable = true) var id: Long = 0
   lateinit var name: String
-  @Convert(converter = JodaDateTimeConverter::class, dbType = Long::class)
-  lateinit var dateCreated: LocalDateTime
+  @Convert(converter = JodaDateTimeConverter::class, dbType = Long::class) lateinit var dateCreated: LocalDateTime
   lateinit var project: ToOne<Project>
 }
 

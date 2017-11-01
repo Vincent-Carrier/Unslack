@@ -5,7 +5,6 @@ import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
 import io.objectbox.relation.ToOne
 import vincentcarrier.todo.models.Commands.ITEM_ADD
-import vincentcarrier.todo.models.Commands.ITEM_REMOVE
 import vincentcarrier.todo.models.Commands.PROJECT_ADD
 import java.util.UUID
 import kotlin.annotation.AnnotationRetention.SOURCE
@@ -32,28 +31,29 @@ class Command() {
 
   @Id var id: Long = 0
   @CommandType lateinit var type: String
+
+  // Either one, but not both. Unfortunately, ObjectBox doesn't support this yet
   lateinit var task: ToOne<Task>
   lateinit var project: ToOne<Project>
 }
 
-sealed class CommandJson {
+class CommandJson(command: Command) {
   val temp_id = UUID.randomUUID().toString()
   val uuid = UUID.randomUUID().toString()
-  @CommandType abstract val type: String
-  abstract val args: Any
-
-  class ProjectAddCommand(project: Project) : CommandJson() {
-    override val type = PROJECT_ADD
-    override val args = ProjectJson(project)
-  }
-
-  class ItemAddCommand(task: Task) : CommandJson() {
-    override val type = ITEM_ADD
-    override val args = TaskJson(task)
-  }
-
-  class ItemRemoveCommand(task: Task) : CommandJson() {
-    override val type = ITEM_REMOVE
-    override val args = TaskJson(task)
+  @CommandType var type = command.type
+  val args: Map<String, Any>  = when(type) {
+      Commands.PROJECT_ADD -> {
+        val project = command.project.target
+        TODO()
+      }
+      Commands.ITEM_ADD -> {
+        val task = command.task.target
+        mapOf("content" to task.name, "project_id" to task.project.targetId)
+      }
+      Commands.ITEM_REMOVE -> {
+        val task = command.task.target
+        TODO()
+      }
+      else -> throw Exception("Couldn't create CommandJson from Command")
   }
 }
