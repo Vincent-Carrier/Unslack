@@ -21,7 +21,7 @@ abstract class Repo<T> {
       ReactiveNetwork.observeNetworkConnectivity(App.instance)
           .subscribeOn(Schedulers.io())
           .flatMap { connectivity ->
-            if (connectivity.isAvailable and User.needsSyncing(10)) {
+            if (connectivity.isAvailable and User.needsSyncing()) {
               Observable.interval(0, 10, SECONDS)
                   .flatMap { whenLoadedFromNetwork() }
             } else whenLoadedFromDisk()
