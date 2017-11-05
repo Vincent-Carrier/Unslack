@@ -3,7 +3,7 @@ buildscript {
     ext.android_support_version = "26.1.0"
     ext.autodispose_version = '0.3.0'
     ext.objectboxVersion = '1.2.0'
-    ext.android_lifecycle_version = '1.0.3'
+    ext.android_lifecycle_version = '1.0.0-rc1'
 
     repositories {
         google()
