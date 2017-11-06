@@ -20,7 +20,7 @@ object User {
   var lastSyncTime = LocalDateTime().minusMillis(Int.MAX_VALUE)
     private set
 
-  fun updateLastSyncTime() { lastSyncTime = LocalDateTime() }
+  fun syncCompleted() { lastSyncTime = LocalDateTime() }
 
   fun needsSyncing(seconds: Int = 10) = isLoggedIn() and lastSyncTime.isBefore(LocalDateTime().minusSeconds(seconds))
 }

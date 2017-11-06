@@ -1,36 +1,31 @@
 package vincentcarrier.todo.data
 
+import io.objectbox.kotlin.boxFor
 import io.reactivex.Observable
-import vincentcarrier.todo.data.local.ProjectDao
-import vincentcarrier.todo.data.local.TaskDao
-import vincentcarrier.todo.models.CommandJson
+import vincentcarrier.todo.App
 import vincentcarrier.todo.models.Project
 import vincentcarrier.todo.models.Task
 import vincentcarrier.todo.models.User
 
 
-class ProjectRepo : Repo<Project>() {
+class ProjectRepo : Repo<Project>(App.boxStore.boxFor<Project>()) {
 
-  override val dao = ProjectDao()
-  private val taskDao = TaskDao()
+  private val taskDao = App.boxStore.boxFor<Task>()
 
-  override fun whenLoadedFromNetwork(): Observable<List<Project>> {
-    return service.whenProjectsLoaded(commandDao.all().map { CommandJson(it) })
-        .map { response ->
-          response.projects.map { Project(it) } to response.items.map { Task(it) }
-        }
+  override fun loadFromDisk(): Observable<List<Project>> = dao.observable()
+
+  override fun loadFromNetwork(): Observable<List<Project>> {
+    return service.fetchProjects()
         .doOnNext { response ->
           // Maybe not the most efficient, but certainly the most readable
           dao.removeAll()
-          taskDao.removeAll()
+          dao.put(response.projects)
+          taskDao.put(response.tasks)
 
-          dao.put(response.first)
-          taskDao.put(response.second)
-
-          User.updateLastSyncTime()
+          User.syncCompleted()
         }
         .map { response ->
-          response.first
+          response.projects
         }
   }
 }

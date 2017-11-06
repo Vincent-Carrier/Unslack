@@ -1,39 +1,44 @@
 package vincentcarrier.todo.data
 
+import io.objectbox.kotlin.boxFor
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
-import vincentcarrier.todo.data.local.TaskDao
+import vincentcarrier.todo.App
 import vincentcarrier.todo.models.Command
-import vincentcarrier.todo.models.CommandJson
-import vincentcarrier.todo.models.Commands
+import vincentcarrier.todo.models.CommandType
+import vincentcarrier.todo.models.Project
 import vincentcarrier.todo.models.Task
 import vincentcarrier.todo.models.Task_
 
-class TaskRepo(private val projectId: Long) : Repo<Task>() {
+class TaskRepo(private val projectId: Long) : Repo<Task>(App.boxStore.boxFor<Task>()) {
 
-  override val dao = TaskDao(projectId)
+  private val projectDao = App.boxStore.boxFor<Project>()
+  private val project = projectDao.get(projectId)
 
-  override fun whenLoadedFromDisk() = dao.whenLoaded({ it.equal(Task_.projectId, projectId) })
+  override fun loadFromDisk() = dao.observable { it.equal(Task_.projectId, projectId) }
 
-  override fun whenLoadedFromNetwork(): Observable<List<Task>> {
-    return service.whenTasksLoaded(commandDao.all().map { CommandJson(it) })
+  override fun loadFromNetwork(): Observable<List<Task>> {
+    return service.fetchTasks()
         .observeOn(Schedulers.io())
         .doOnNext { commandDao.removeAll() }
         .map { response ->
-          response.items.map { Task(it) }
-              .filter { it.project.targetId == projectId }
+              response.tasks.filter { it.project.targetId == projectId }
         }
   }
 
   fun put(task: Task) {
-    val boundTask = task.apply { project.targetId = projectId }
-    dao.put(boundTask)
-    commandDao.put(Command(Commands.ITEM_ADD, boundTask))
+    projectDao.put(project.apply { tasks.add(task) })
+    if(!App.isOnline()) commandDao.put(Command(CommandType.ITEM_ADD, task))
+  }
+
+  fun put(name: String) {
+    val task = Task(name, projectId)
+    put(task)
   }
 
   fun remove(task: Task) {
-    commandDao.put(Command(Commands.ITEM_REMOVE, task))
-    dao.remove(task)
+    projectDao.put(project.apply { tasks.remove(task) })
+    if(!App.isOnline()) commandDao.put(Command(CommandType.ITEM_REMOVE, task))
   }
 }
 
