@@ -5,9 +5,8 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable.Factory
 import android.view.KeyEvent
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.addTo
-import io.reactivex.rxkotlin.subscribeBy
+import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
+import com.uber.autodispose.kotlin.autoDisposeWith
 import kotlinx.android.synthetic.main.activity_task_list.addTaskEditText
 import kotlinx.android.synthetic.main.activity_task_list.taskList
 import org.jetbrains.anko.toast
@@ -23,7 +22,7 @@ class TaskListActivity : AppCompatActivity() {
         .get(TaskListViewModel::class.java)
   }
 
-  private val disposables = CompositeDisposable()
+  private val scopeProvider by lazy { AndroidLifecycleScopeProvider.from(this) }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -46,13 +45,7 @@ class TaskListActivity : AppCompatActivity() {
   override fun onStart() {
     super.onStart()
     vm.whenTasksLoaded()
-        .subscribeBy(
-            onError = { toast(it.localizedMessage) }
-        ).addTo(disposables)
-  }
-
-  override fun onPause() {
-    super.onPause()
-    disposables.clear()
+        .autoDisposeWith(scopeProvider)
+        .subscribe({}, { toast(it.localizedMessage) })
   }
 }

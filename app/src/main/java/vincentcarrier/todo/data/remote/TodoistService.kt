@@ -8,14 +8,12 @@ import vincentcarrier.todo.models.SyncJson
 import vincentcarrier.todo.models.User
 
 
-private val todoistApi = Retrofit().createTodoistApi(User.accessToken)
-
-class TodoistService(api: TodoistApi = todoistApi) : TodoistApi by api
+val todoistApi = Retrofit().createTodoistApi(User.accessToken)
 
 interface TodoistApi {
-  @POST("""sync?sync_token="*"&resource_types=["projects","items"]""")
-  fun whenProjectsLoaded(@Query("commands") commands: List<CommandJson>): Observable<SyncJson>
+  @POST("""sync?sync_token="*"&resource_types=["projects","tasks"]""")
+  fun fetchProjects(@Query("commands") commands: List<CommandJson> = emptyList()): Observable<SyncJson>
 
-  @POST("""sync?sync_token="*"&resource_types=["items"]""")
-  fun whenTasksLoaded(@Query("commands") commands: List<CommandJson>): Observable<SyncJson>
+  @POST("""sync?sync_token="*"&resource_types=["tasks"]""")
+  fun fetchTasks(@Query("commands") commands: List<CommandJson> = emptyList()): Observable<SyncJson>
 }

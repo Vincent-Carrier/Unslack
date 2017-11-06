@@ -5,6 +5,7 @@ import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import com.airbnb.epoxy.TypedEpoxyController
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import org.jetbrains.anko.startActivity
 import vincentcarrier.todo.App
@@ -23,10 +24,11 @@ class ProjectListViewModel(
 
   internal val adapter = controller.adapter
 
-  internal fun whenProjectsLoaded() =
-      repo.whenLoaded()
-      .observeOn(AndroidSchedulers.mainThread())
-      .doOnNext { controller.setData(it) }
+  internal fun whenProjectsLoaded(): Observable<List<Project>> {
+    return repo.whenLoaded()
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnNext { controller.setData(it) }
+  }
 
   private inner class ProjectListController: TypedEpoxyController<List<Project>>() {
     override fun buildModels(Projects: List<Project>) {

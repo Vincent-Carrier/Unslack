@@ -17,7 +17,7 @@ class TaskListViewModel(private val repo: TaskRepo) : ViewModel() {
         controller.setData(it)
       }
 
-  internal fun addTask(name: String) = repo.put(Task(name))
+  internal fun addTask(name: String) = repo.put(name)
 
   private val controller = TaskListController()
   internal val adapter = controller.adapter

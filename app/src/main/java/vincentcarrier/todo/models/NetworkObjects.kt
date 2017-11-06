@@ -1,31 +1,34 @@
 package vincentcarrier.todo.models
 
+import com.squareup.moshi.Json
+import vincentcarrier.todo.models.CommandType.ITEM_ADD
+import vincentcarrier.todo.models.CommandType.ITEM_REMOVE
+import vincentcarrier.todo.models.CommandType.PROJECT_ADD
+import java.util.UUID
 
-class SyncJson(
-    val projects: List<ProjectJson>,
-    val items: List<TaskJson>
+
+data class SyncJson(
+    @Json(name = "projects") val projects: List<Project>,
+    @Json(name = "items") val tasks: List<Task>
 )
 
-class ProjectJson(
-    val id: Long,
-    val name: String
-) {
-  constructor(project: Project) : this(
-      id = project.id,
-      name = project.name
-  )
-}
-
-class TaskJson(
-    val id: Long,
-    val content: String,
-    val project_id: Long,
-    val date_added: String
-) {
-  constructor(task: Task) : this(
-      id = task.id,
-      content = task.name,
-      project_id = task.project.targetId,
-      date_added = task.dateCreated.toString("EEE dd MMM yyyy HH:mm:ss Z")
-  )
+class CommandJson(command: Command) {
+  val temp_id = UUID.randomUUID().toString()
+  val uuid = UUID.randomUUID().toString()
+  val type = command.type.name.toLowerCase()
+  val args: Map<String, Any>  = when(command.type) {
+    PROJECT_ADD -> {
+      val project = command.project.target
+      mapOf(
+          "name" to project.name,
+          "id" to project.id
+      )
+    } ITEM_ADD, ITEM_REMOVE -> {
+      val task = command.task.target
+      mapOf(
+          "content" to task.name,
+          "project_id" to task.project.targetId
+      )
+    } else -> throw Exception("Couldn't create JSON from Command")
+  }
 }
