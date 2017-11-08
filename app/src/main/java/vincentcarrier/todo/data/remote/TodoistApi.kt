@@ -7,10 +7,10 @@ import vincentcarrier.todo.models.CommandJson
 import vincentcarrier.todo.models.SyncJson
 
 
-internal abstract class TodoistApi {
-  @POST("""sync?sync_token="*"&resource_types=["projects","tasks"]""")
-  abstract fun fetchProjects(@Query("commands") commands: List<CommandJson> = emptyList()): Observable<SyncJson>
+interface TodoistApi {
+  @POST("""sync?sync_token="*"&resource_types=["projects","items"]""")
+  fun fetchProjects(@Query("commands") commands: List<CommandJson> = emptyList()): Observable<SyncJson>
 
-  @POST("""sync?sync_token="*"&resource_types=["tasks"]""")
-  abstract fun fetchTasks(@Query("commands") commands: List<CommandJson> = emptyList()): Observable<SyncJson>
+  @POST("""sync?sync_token="*"&resource_types=["items"]""")
+  fun fetchTasks(@Query("commands") commands: List<CommandJson> = emptyList()): Observable<SyncJson>
 }

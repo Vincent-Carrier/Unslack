@@ -39,7 +39,7 @@ class Task {
   }
 }
 
-internal class TaskJson {
+class TaskJson {
   val id: Long
   val content: String
   val date_added: String

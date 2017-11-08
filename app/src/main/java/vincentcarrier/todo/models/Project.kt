@@ -30,7 +30,7 @@ class Project {
   }
 }
 
-internal class ProjectJson {
+class ProjectJson {
   val id: Long
   val name: String
 

@@ -37,7 +37,7 @@ class Command {
   }
 }
 
-internal class CommandJson(command: Command) {
+class CommandJson(command: Command) {
   val temp_id = UUID.randomUUID().toString()
   val uuid = UUID.randomUUID().toString()
   val type = command.type.name.toLowerCase()

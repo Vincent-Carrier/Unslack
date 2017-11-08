@@ -22,7 +22,9 @@ class TaskRepo(private val projectId: Long) : Repo<Task>(App.boxStore.boxFor<Tas
         .observeOn(Schedulers.io())
         .doOnNext { commandDao.removeAll() }
         .map { response ->
-              response.tasks.filter { it.project.targetId == projectId }
+              response.items
+                  .map { Task(it) }
+                  .filter { it.project.targetId == projectId }
         }
   }
 
