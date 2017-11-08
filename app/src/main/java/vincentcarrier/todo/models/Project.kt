@@ -30,7 +30,17 @@ class Project {
   }
 }
 
-internal data class ProjectJson(
-    val id: Long,
-    val name: String
-)
+internal class ProjectJson {
+  val id: Long
+  val name: String
+
+  constructor(id: Long, name: String) {
+    this.id = id
+    this.name = name
+  }
+
+  constructor(project: Project) {
+    this.id = project.id
+    this.name = project.name
+  }
+}

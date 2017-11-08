@@ -9,16 +9,16 @@ import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import vincentcarrier.todo.App
 import vincentcarrier.todo.data.remote.TodoistApi
-import vincentcarrier.todo.data.remote.todoistApi
+import vincentcarrier.todo.data.remote.todoistService
 import vincentcarrier.todo.models.Command
 import vincentcarrier.todo.models.User
 import java.util.concurrent.TimeUnit.SECONDS
 
 
-abstract class Repo<T>(
+abstract class Repo<T> internal constructor(
     protected val dao: Box<T>, // Type erasure is a bitch. Reified types cannot help us here.
     protected val commandDao: Box<Command> = App.boxStore.boxFor<Command>(),
-    protected val service: TodoistApi = todoistApi
+    protected val service: TodoistApi = todoistService
 ) {
 
   fun whenLoaded(): Observable<List<T>> {

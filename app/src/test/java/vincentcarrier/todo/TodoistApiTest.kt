@@ -2,7 +2,7 @@ package vincentcarrier.todo
 
 import org.amshove.kluent.shouldNotBeEmpty
 import org.junit.Test
-import vincentcarrier.todo.data.remote.todoistApi
+import vincentcarrier.todo.data.remote.todoistService
 
 
 class TodoistApiTest {
@@ -15,7 +15,7 @@ class TodoistApiTest {
 
   @Test
   fun `projects should load`() {
-    val response = todoistApi.fetchProjects().blockingFirst()
+    val response = todoistService.fetchProjects().blockingFirst()
 
     response.projects.shouldNotBeEmpty()
     response.tasks.shouldNotBeEmpty()
