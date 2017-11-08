@@ -45,14 +45,14 @@ class TaskJson {
   val date_added: String
   val project_id: Long
 
-  constructor(id: Long, content: String, date_added: String, project_id: Long) {
+  internal constructor(id: Long, content: String, date_added: String, project_id: Long) {
     this.id = id
     this.content = content
     this.date_added = date_added
     this.project_id = project_id
   }
 
-  constructor(task: Task) {
+  internal constructor(task: Task) {
     this.id = task.id
     this.content = task.name
     this.date_added = task.dateAdded.toString("EEE dd MMM yyyy HH:mm:ss Z")
