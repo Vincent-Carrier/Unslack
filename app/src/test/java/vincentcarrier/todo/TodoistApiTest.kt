@@ -18,6 +18,6 @@ class TodoistApiTest {
     val response = todoistService.fetchProjects().blockingFirst()
 
     response.projects.shouldNotBeEmpty()
-    response.tasks.shouldNotBeEmpty()
+    response.items.shouldNotBeEmpty()
   }
 }
