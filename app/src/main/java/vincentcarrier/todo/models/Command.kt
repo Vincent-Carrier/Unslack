@@ -1,6 +1,5 @@
 package vincentcarrier.todo.models
 
-import com.squareup.moshi.Json
 import io.objectbox.annotation.Convert
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
@@ -12,17 +11,13 @@ import java.util.UUID
 
 @Entity
 class Command {
-  @Id
-  var id: Long = 0
+  @Id var id: Long = 0
 
-  @Json(name = "type")
   @Convert(converter = CommandTypeConverter::class, dbType = Int::class)
   lateinit var type: CommandType
 
-  @kotlin.jvm.Transient
   lateinit var project: ToOne<Project>
 
-  @kotlin.jvm.Transient
   lateinit var task: ToOne<Task>
 
   // For ObjectBox
@@ -44,17 +39,19 @@ class CommandJson(command: Command) {
   val uuid = UUID.randomUUID().toString()
   val type = command.type.name.toLowerCase()
   val args: Map<String, Any> = when(command.type) {
-    PROJECT_ADD -> { val project = command.project.target
+    PROJECT_ADD -> { val project = ProjectJson(command.project.target)
       mapOf(
-          "name" to project.name,
-          "id" to project.id
+          "id" to project.id,
+          "name" to project.name
       )
     }
 
-    ITEM_ADD, ITEM_REMOVE -> { val task = command.task.target
+    ITEM_ADD, ITEM_REMOVE -> { val task = TaskJson(command.task.target)
       mapOf(
-          "content" to task.name,
-          "project_id" to task.project.targetId
+          "id" to task.id,
+          "content" to task.content,
+          "date_added" to task.date_added,
+          "project_id" to task.project_id
       )
     }
   }

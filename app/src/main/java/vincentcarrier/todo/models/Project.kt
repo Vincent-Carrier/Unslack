@@ -34,12 +34,12 @@ class ProjectJson {
   val id: Long
   val name: String
 
-  constructor(id: Long, name: String) {
+  internal constructor(id: Long, name: String) {
     this.id = id
     this.name = name
   }
 
-  constructor(project: Project) {
+  internal constructor(project: Project) {
     this.id = project.id
     this.name = project.name
   }

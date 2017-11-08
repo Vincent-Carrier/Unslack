@@ -1,23 +1,28 @@
 package vincentcarrier.todo
 
+import org.amshove.kluent.shouldBeNull
 import org.amshove.kluent.shouldNotBeEmpty
+import org.amshove.kluent.shouldNotBeNull
 import org.junit.Test
 import vincentcarrier.todo.data.remote.todoistService
 
 
 class TodoistApiTest {
 
-//  val server = MockWebServer().apply { start() }
-//  val baseUrl: HttpUrl = server.url("/api/v7/")
-//
-//
-//  val service = Retrofit().createTodoistApi(baseUrl = baseUrl.toString())
 
-  @Test
-  fun `projects should load`() {
-    val response = todoistService.fetchProjects().blockingFirst()
+  private val response = todoistService.fetchProjects().blockingFirst()
 
-    response.projects.shouldNotBeEmpty()
-    response.items.shouldNotBeEmpty()
+  @Test fun `projects should load`() {
+    with(response) {
+      projects.shouldNotBeEmpty()
+      items.shouldNotBeEmpty()
+    }
+  }
+
+  @Test fun `projects should contain inbox`() {
+    with(response) {
+      projects.find { it.name == "Inbox" }.shouldNotBeNull()
+      projects.find { it.name == "Non-existing project" }.shouldBeNull()
+    }
   }
 }
