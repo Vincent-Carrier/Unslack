@@ -16,16 +16,17 @@ class ProjectRepo : Repo<Project>(App.boxStore.boxFor<Project>()) {
 
   override fun loadFromNetwork(): Observable<List<Project>> {
     return service.fetchProjects()
+        .map { it.projects.map { Project(it) } to it.items.map { Task(it) } }
         .doOnNext { response ->
           // Maybe not the most efficient, but certainly the most readable
           dao.removeAll()
-          dao.put(response.projects)
-          taskDao.put(response.tasks)
+          dao.put(response.first)
+          taskDao.put(response.second)
 
           User.syncCompleted()
         }
         .map { response ->
-          response.projects
+          response.first
         }
   }
 }

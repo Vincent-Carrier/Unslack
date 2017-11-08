@@ -12,43 +12,38 @@ import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import vincentcarrier.todo.BuildConfig
-import vincentcarrier.todo.models.CommandTypeConverter
-import vincentcarrier.todo.models.LocalDateTimeConverter
 import vincentcarrier.todo.models.User
 
-internal class Retrofit {
+internal val todoistService: TodoistApi = TodoistService().create()
 
-  internal fun createTodoistApi(
-      token: String = User.accessToken,
-      baseUrl: String = "https://todoist.com/api/v7/"
-  ): TodoistApi {
-    return todoistApi(retrofit(okHttpClient(token), baseUrl))
-  }
+private class TodoistService {
 
-  private fun todoistApi(retrofit: Retrofit) = retrofit.create<TodoistApi>(TodoistApi::class.java)
+  fun create(retrofit: Retrofit = retrofit()): TodoistApi = retrofit.create<TodoistApi>(TodoistApi::class.java)
 
-  private fun retrofit(client: OkHttpClient, baseUrl: String): Retrofit {
+  fun retrofit(
+      client: OkHttpClient = okHttpClient(),
+      baseUrl: String = "https://todoist.com/api/v7/",
+      converterFactory: Converter.Factory = converterFactory()
+  ): Retrofit {
     return Retrofit.Builder()
         .client(client)
         .baseUrl(baseUrl)
-        .addConverterFactory(converterFactory())
+        .addConverterFactory(converterFactory)
         .addCallAdapterFactory(
             RxJava2CallAdapterFactory
                 .createWithScheduler(Schedulers.io()))
         .build()
   }
 
-  private fun converterFactory(): Converter.Factory {
+  fun converterFactory(): Converter.Factory {
     return MoshiConverterFactory.create(
         Builder()
             .add(KotlinJsonAdapterFactory())
-            .add(LocalDateTimeConverter())
-            .add(CommandTypeConverter())
             .build()
     )
   }
 
-  private fun okHttpClient(token: String): OkHttpClient {
+  fun okHttpClient(token: String = User.accessToken): OkHttpClient {
     return OkHttpClient.Builder()
         .addInterceptor { chain ->
           val original = chain.request()
