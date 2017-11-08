@@ -19,8 +19,10 @@ class Command {
   @Convert(converter = CommandTypeConverter::class, dbType = Int::class)
   lateinit var type: CommandType
 
+  @kotlin.jvm.Transient
   lateinit var project: ToOne<Project>
 
+  @kotlin.jvm.Transient
   lateinit var task: ToOne<Task>
 
   // For ObjectBox
