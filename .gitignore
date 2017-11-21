@@ -8,3 +8,5 @@
 /captures
 .externalNativeBuild
 /app/src/main/java/vincentcarrier/todo/models/AccessToken.kt
+/data/src/main/java/vincentcarrier/todo/data/models/AccessToken.kt
+!/data/src/main/java/vincentcarrier/todo/data/models/AccessToken.kt

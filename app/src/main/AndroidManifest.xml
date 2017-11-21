@@ -3,31 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="vincentcarrier.todo">
 
-  <uses-permission android:name="android.permission.INTERNET"/>
-  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-
   <application
       android:name=".App"
       android:allowBackup="true"
       android:icon="@mipmap/ic_launcher"
-      android:label="@string/tasks_screen_title"
+      android:label="Todo"
       android:roundIcon="@mipmap/ic_launcher_round"
       android:supportsRtl="true"
       android:theme="@style/AppTheme"
       tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-    <activity android:name=".screens.tasklist.TaskListActivity"/>
-    <activity
-        android:name=".screens.projectlist.ProjectListActivity"
-        android:label="@string/title_activity_project_list"
-        android:theme="@style/AppTheme.NoActionBar">
-      <intent-filter>
-        <action android:name="android.intent.action.MAIN"/>
 
-        <category android:name="android.intent.category.LAUNCHER"/>
-      </intent-filter>
-    </activity>
-    <activity android:name=".screens.redirect.RedirectActivity">
-    </activity>
   </application>
 
 </manifest>
