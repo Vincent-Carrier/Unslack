@@ -16,7 +16,7 @@ class Project {
   @Backlink lateinit var tasks: ToMany<Task>
 
   // For ObjectBox
-  constructor() {}
+  constructor()
 
   // For user
   constructor(name: String) {

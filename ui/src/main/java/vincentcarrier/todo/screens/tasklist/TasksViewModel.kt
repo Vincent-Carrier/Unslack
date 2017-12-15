@@ -4,10 +4,8 @@ import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import com.airbnb.epoxy.TypedEpoxyController
 import io.reactivex.android.schedulers.AndroidSchedulers
-import junit.runner.Version.id
 import vincentcarrier.todo.data.TasksRepo
 import vincentcarrier.todo.data.models.Task
-import vincentcarrier.todo.models.Task
 
 
 class TasksViewModel(private val repo: TasksRepo) : ViewModel() {
@@ -37,8 +35,7 @@ class TasksViewModel(private val repo: TasksRepo) : ViewModel() {
   }
 }
 
-class TasksVmFactory(private val repo: TasksRepo)
-  : ViewModelProvider.Factory {
+class TasksVmFactory(private val repo: TasksRepo) : ViewModelProvider.Factory {
   override fun <T : ViewModel> create(modelClass: Class<T>): T {
     @Suppress("UNCHECKED_CAST") return TasksViewModel(repo) as T
   }

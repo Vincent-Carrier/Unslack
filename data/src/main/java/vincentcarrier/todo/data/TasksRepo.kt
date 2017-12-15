@@ -14,7 +14,7 @@ import vincentcarrier.todo.data.models.Project
 import vincentcarrier.todo.data.models.Task
 import vincentcarrier.todo.data.models.Task_
 
-class TasksRepo(private val projectId: Long, override val kodein: Kodein) : Repo<Task>() {
+class TasksRepo(private val projectId: Long, kodein: Kodein) : Repo<Task>(kodein) {
 
   private val taskDao: Box<Task> = instance()
   private val projectDao: Box<Project> = instance()
@@ -44,13 +44,7 @@ class TasksRepo(private val projectId: Long, override val kodein: Kodein) : Repo
   }
 
   fun remove(task: Task) {
-    projectDao.put(project.apply { tasks.remove(task) })
-    if(!context.isOnline()) commandDao.put(
-        Command(ITEM_REMOVE, task))
+    taskDao.remove(task)
+    if(!context.isOnline()) commandDao.put(Command(ITEM_REMOVE, task))
   }
-}
-
-fun <T> Box<T>.observable(filter: (QueryBuilder<T>) -> QueryBuilder<T> = { it }): Observable<List<T>> {
-  return RxQuery.observable(filter(query()).build())
-      .subscribeOn(Schedulers.io())
 }

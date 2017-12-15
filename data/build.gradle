@@ -32,11 +32,7 @@ android {
 }
 
 dependencies {
-  implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-  api 'com.github.salomonbrys.kodein:kodein:4.1.0'
-
-  implementation 'com.github.pwittchen:reactivenetwork-rx2:0.12.1'
+  implementation libraries.common
 
   implementation 'com.squareup.retrofit2:retrofit:2.3.0'
   implementation 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
@@ -44,21 +40,19 @@ dependencies {
   implementation 'com.squareup.moshi:moshi-kotlin:1.5.0'
   implementation 'com.squareup.okhttp3:okhttp:3.9.0'
   implementation 'com.squareup.okhttp3:logging-interceptor:3.9.0'
+  implementation 'com.github.pwittchen:reactivenetwork-rx2:0.12.1'
 
   // OAuth library using Chrome Custom Tabs
-  implementation 'net.openid:appauth:0.2.0'
+//  implementation 'net.openid:appauth:0.2.0'
 
   // NoSQL database
   implementation "io.objectbox:objectbox-kotlin:$objectboxVersion"
   kapt "io.objectbox:objectbox-processor:$objectboxVersion"
   implementation 'io.objectbox:objectbox-rxjava:0.9.8'
-  debugImplementation "io.objectbox:objectbox-android-objectbrowser:$objectboxVersion"
-  releaseImplementation "io.objectbox:objectbox-android:$objectboxVersion"
+//  debugImplementation "io.objectbox:objectbox-android-objectbrowser:$objectboxVersion"
+//  releaseImplementation "io.objectbox:objectbox-android:$objectboxVersion"
   implementation 'joda-time:joda-time:2.9.9'
 
-  testImplementation 'junit:junit:4.12'
-  testImplementation 'org.amshove.kluent:kluent-android:1.30'
-  testImplementation 'org.mockito:mockito-core:2.8.47'
-  testImplementation "com.nhaarman:mockito-kotlin-kt1.1:1.5.0"
+  testImplementation libraries.unitTesting
   testImplementation 'com.squareup.okhttp3:mockwebserver:3.9.0'
 }

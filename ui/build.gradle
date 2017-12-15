@@ -38,9 +38,9 @@ android {
 }
 
 dependencies {
-  implementation project(":data")
+  implementation project(":data") // Should eventually split data into network, db and model modules
 
-  implementation fileTree(include: ['*.jar'], dir: 'libs')
+  implementation libraries.common
 
   implementation 'com.github.salomonbrys.kodein:kodein-android:4.1.0'
 
@@ -57,10 +57,6 @@ dependencies {
   implementation "android.arch.lifecycle:runtime:$android_lifecycle_version"
   implementation "android.arch.lifecycle:extensions:$android_lifecycle_version"
   kapt "android.arch.lifecycle:compiler:$android_lifecycle_version"
-
-  implementation "com.uber.autodispose:autodispose:$autodispose_version"
-  implementation "com.uber.autodispose:autodispose-kotlin:$autodispose_version"
-  implementation "com.uber.autodispose:autodispose-android-archcomponents:$autodispose_version"
 
   // Used to move RecyclerView logic into the ViewModel
   implementation 'com.airbnb.android:epoxy:2.7.2'

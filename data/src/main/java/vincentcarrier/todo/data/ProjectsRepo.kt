@@ -10,7 +10,7 @@ import vincentcarrier.todo.data.models.Task
 import vincentcarrier.todo.data.models.User
 
 
-class ProjectsRepo(override val kodein: Kodein) : Repo<Project>() {
+class ProjectsRepo(kodein: Kodein) : Repo<Project>(kodein) {
 
   private val projectDao: Box<Project> = instance()
   private val taskDao: Box<Task> = instance()

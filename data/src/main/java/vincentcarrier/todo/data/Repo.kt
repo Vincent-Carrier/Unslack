@@ -5,22 +5,19 @@ import android.net.ConnectivityManager
 import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.KodeinAware
-import com.github.salomonbrys.kodein.bind
 import com.github.salomonbrys.kodein.instance
-import com.github.salomonbrys.kodein.provider
 import io.objectbox.Box
-import io.objectbox.BoxStore
+import io.objectbox.query.QueryBuilder
+import io.objectbox.rx.RxQuery
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import vincentcarrier.todo.data.models.Command
-import vincentcarrier.todo.data.models.Project
-import vincentcarrier.todo.data.models.Task
 import vincentcarrier.todo.data.models.User
 import vincentcarrier.todo.data.remote.TodoistApi
 import java.util.concurrent.TimeUnit.SECONDS
 
 
-abstract class Repo<T> internal constructor() : KodeinAware {
+abstract class Repo<T> internal constructor(override val kodein: Kodein) : KodeinAware {
 
   protected val commandDao: Box<Command> = instance()
   protected val service: TodoistApi = instance()
@@ -32,7 +29,7 @@ abstract class Repo<T> internal constructor() : KodeinAware {
         .flatMap { connectivity ->
           if (connectivity.isAvailable and User.needsSyncing()) {
             Observable.interval(0, 10, SECONDS)
-                .flatMap { loadFromNetwork() }
+                .flatMap { loadFromNetwork().mergeWith { loadFromDisk() }.distinct() }
           } else loadFromDisk()
         }
   }
@@ -42,10 +39,9 @@ abstract class Repo<T> internal constructor() : KodeinAware {
   protected abstract fun loadFromNetwork(): Observable<List<T>>
 }
 
-val databaseModule = Kodein.Module {
-  bind<Box<Task>>() with provider { instance<BoxStore>().boxFor(Task::class.java) }
-  bind<Box<Project>>() with provider { instance<BoxStore>().boxFor(Project::class.java) }
-  bind<Box<Command>>() with provider { instance<BoxStore>().boxFor(Command::class.java) }
+fun <T> Box<T>.observable(filter: (QueryBuilder<T>) -> QueryBuilder<T> = { it }): Observable<List<T>> {
+  return RxQuery.observable(filter(query()).build())
+      .subscribeOn(Schedulers.io())
 }
 
 fun Context.isOnline(): Boolean {

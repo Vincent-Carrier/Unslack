@@ -1,10 +1,5 @@
 package vincentcarrier.todo.data.remote
 
-import com.github.salomonbrys.kodein.Kodein
-import com.github.salomonbrys.kodein.bind
-import com.github.salomonbrys.kodein.instance
-import com.github.salomonbrys.kodein.singleton
-import com.github.salomonbrys.kodein.with
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import com.squareup.moshi.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi.Builder
@@ -13,11 +8,10 @@ import okhttp3.OkHttpClient
 import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import vincentcarrier.todo.data.models.User
 
-private fun service(retrofit: Retrofit): TodoistApi = retrofit.create(TodoistApi::class.java)
+internal fun service(retrofit: Retrofit): TodoistApi = retrofit.create(TodoistApi::class.java)
 
-private fun retrofit(
+internal fun retrofit(
     client: OkHttpClient,
     baseUrl: String,
     converterFactory: Converter.Factory
@@ -32,7 +26,7 @@ private fun retrofit(
       .build()
 }
 
-private fun converterFactory(): Converter.Factory {
+internal fun converterFactory(): Converter.Factory {
   return MoshiConverterFactory.create(
       Builder()
           .add(KotlinJsonAdapterFactory())
@@ -40,7 +34,7 @@ private fun converterFactory(): Converter.Factory {
   )
 }
 
-private fun okHttpClient(token: String): OkHttpClient {
+internal fun okHttpClient(token: String): OkHttpClient {
   return OkHttpClient.Builder()
       .addInterceptor { chain ->
         val original = chain.request()
@@ -52,12 +46,4 @@ private fun okHttpClient(token: String): OkHttpClient {
 //        level = if (BuildConfig.DEBUG) BASIC else NONE
 //      })
       .build()
-}
-
-val webServiceModule = Kodein.Module {
-  bind<TodoistApi>() with singleton { service(instance()) }
-  bind() from singleton { retrofit(instance(), instance("base url"), instance()) }
-  bind() from singleton { okHttpClient(User.accessToken) }
-  bind() from singleton { converterFactory() }
-  constant("base url") with "https://todoist.com/api/v7/"
 }

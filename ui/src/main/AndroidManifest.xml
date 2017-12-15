@@ -4,19 +4,22 @@
     package="vincentcarrier.todo">
 
   <application>
-    <activity android:name=".screens.tasklist.TasksActivity"/>
+
+    <activity
+        android:name=".screens.tasklist.TasksActivity"
+        android:label="@string/title_activity_task_list"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+
     <activity
         android:name=".screens.projectlist.ProjectsActivity"
         android:label="@string/title_activity_project_list"
-        android:theme="@style/AppTheme.NoActionBar">
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
-
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
     </activity>
-    <activity android:name=".screens.redirect.RedirectActivity">
-    </activity>
+
   </application>
 
 </manifest>

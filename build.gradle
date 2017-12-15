@@ -1,9 +1,25 @@
 buildscript {
-    ext.kotlin_version = '1.1.60'
-    ext.android_support_version = "27.0.1"
+    ext.kotlin_version = '1.2.0'
+    ext.android_support_version = "27.0.2"
     ext.autodispose_version = '0.4.0'
-    ext.objectboxVersion = '1.2.0'
+    ext.objectboxVersion = '1.3.4'
     ext.android_lifecycle_version = '1.0.0'
+
+    ext.libraries = [
+        common: [
+            fileTree(dir: 'libs', include: ['*.jar']),
+            "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version",
+            'io.reactivex.rxjava2:rxjava:2.1.3',
+            'io.reactivex.rxjava2:rxkotlin:2.1.0',
+            'com.github.salomonbrys.kodein:kodein:4.1.0'
+        ],
+        unitTesting: [
+            'junit:junit:4.12',
+            'io.kotlintest:kotlintest:2.0.7',
+            'org.mockito:mockito-core:2.8.47',
+            "com.nhaarman:mockito-kotlin-kt1.1:1.5.0"
+        ]
+    ]
 
     repositories {
         google()

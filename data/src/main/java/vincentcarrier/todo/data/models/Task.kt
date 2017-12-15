@@ -20,7 +20,7 @@ class Task {
   lateinit var project: ToOne<Project>
 
   // For ObjectBox
-  constructor() {}
+  constructor()
 
   // For user
   constructor(name: String, projectId: Long) {
